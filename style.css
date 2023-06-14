@@ -1,0 +1,168 @@
+*
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    background-color: rgb(255, 240, 240);
+}
+
+/* Style of the top part(made by me and the title */
+
+#topside
+{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+#topside h1
+{
+    /*font-variant-numeric: slashed-zero; does not work*/
+    transition: transform 0.5s ease;
+    font-size: xxx-large;
+    font-weight: 500;
+    font-family: 'Courier New', Courier, monospace;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -20px;
+    margin-bottom: 40px;
+}
+
+#topside h1:hover
+{
+    /*cubic-bezier(0.4, 0, 0.96, 0.27)*/
+    transform: scale(1.1) translateY(30px);
+}
+
+#topside p
+{
+    padding-left: 10px;
+    font-weight: 700;
+    font-family: monospace;
+    margin-top: 10px;
+    width: fit-content;
+    font-size: larger;
+}
+
+#topside a
+{
+    text-decoration: none;
+    color: #5d5d5d;
+    cursor: default;
+}
+
+/* done */
+
+.container
+{
+    width: fit-content;
+    margin: 0 auto;
+}
+
+/* style of the calculator itself */
+
+.calculator
+{
+    display: flex;
+    /*align-items: center;*/
+    flex-direction: column;
+    flex-wrap: wrap;
+    /*font-variant-numeric: slashed-zero;*/
+    font-family: 'Courier New', Courier, monospace;
+    padding: 15px;
+    padding-bottom: 5px;
+    border-top: 2px solid rgb(182, 182, 182);
+    border-right: 4px solid rgb(215, 215, 215);
+    border-bottom: 3px solid rgb(215, 215, 215);
+    border-radius: 20px;
+    background-color: rgb(233, 142, 233);
+    min-width: 320px;
+    min-height: 420px;
+    max-width: 320px;
+    max-height: 600px;
+    box-shadow: 5px 5px gray;
+}
+/* 1000 x 286w 
+calculator buttons layout
+ac del % +/-
+1   2  3  +
+4   5  6  -
+7   8  9  x
+0  00  .  :
+*/
+
+.display
+{
+    margin-bottom: 13px;
+    position: sticky;
+    max-width: 286px;
+    min-height: 50px;
+    height: fit-content;
+    max-height: 240px;
+    /*flex-wrap: wrap;*/
+    /*justify-content: flex-end;*/
+    padding: 5px;
+    background-color: rgb(224, 233, 185);
+    border-radius: 10px;
+    box-shadow: 3px 3px gray;
+    border: 2px solid lightgray;
+    /*overflow: auto;*/
+    word-wrap: break-word;
+}
+
+.display h1
+{
+    font-weight: 500;
+    margin: 0px;
+    letter-spacing: -3px;
+    text-align: right;
+}
+
+.cover
+{
+    margin-top: auto;
+    margin-bottom: 10px;
+    padding-top: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 16px;
+    background-color: aliceblue;
+    border: 2px solid lightgray;
+    border-radius: 24px;
+    box-shadow: 3px 4px gray;
+}
+
+.keypad
+{
+    justify-content: space-around;
+    /*gap: 5px;*/
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.keypad div
+{
+    font-weight: 900;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 12px 12px;
+    justify-content: center;
+    box-shadow: 1px 3px rgb(116, 116, 116);
+    display: flex;
+    flex-wrap: wrap;
+    width: 59px;
+    margin-bottom: 13px;
+    background-image: linear-gradient(45deg, whitesmoke, antiquewhite);
+    /*background-color: antiquewhite;*/
+    /*animation: gradientTransition 0.5s ease-in-out;*/
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.keypad div:hover
+{
+    background-image: linear-gradient(45deg, rgb(238, 226, 210), rgb(248, 220, 220));
+}
