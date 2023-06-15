@@ -1,161 +1,133 @@
-const display = document.querySelector('.display #output');
+const display = document.getElementById('output');
 const audio = document.getElementById('keyPress');
 
+audio.volume = 0.3;
+audio.playbackRate = 3;
+
+const keys = document.querySelectorAll('.keypad div');
+
+//calculator variables
 let a = 0;
 let b = 0;
 let result = 0;
 let operator = null;
+let isActiveOperation = false;
 let dotInserted = false;
 
-// function playKeyPressSound() {
-//   audio.currentTime = 0;
-//   audio.volume = 0.3;
-//   audio.play();
-// }
-
-function updateDisplay(value) {
-  display.innerHTML = value;
-}
-
-function clearCalculator() {
-  a = 0;
-  b = 0;
-  result = 0;
-  operator = null;
-  dotInserted = false;
-  updateDisplay('0');
-}
-
-function handleNumberClick(number) {
-  if (!operator) {
-    a = parseFloat(a.toString() + number);
-    updateDisplay(a);
-  } else {
-    b = parseFloat(b.toString() + number);
-    updateDisplay(b);
+function performCalculation(num1, num2, op) {
+  if (op == '-') {
+    return +num1 - +num2;
+  }
+  if (op == '+') {
+    return +num1 + +num2;
+  }
+  if (op == 'x') {
+    return +num1 * +num2;
+  }
+  if (op == '/') {
+    return +num1 / +num2;
   }
 }
 
-function handleDotClick() {
-  if (!dotInserted) {
-    if (!operator) {
-      a = parseFloat(a.toString() + '.');
-      updateDisplay(a);
-    } else {
-      b = parseFloat(b.toString() + '.');
-      updateDisplay(b);
+const key = keys.forEach(element => {
+  element.addEventListener('click', function() {
+    console.log(`Pressed button with ID ${element.id}`);
+
+    //check if dot is still in number
+    if (display.innerHTML.includes('.') == false) {
+      dotInserted = false;
     }
-    dotInserted = true;
-  }
-}
 
-function handleOperatorClick(op) {
-  if (!operator) {
-    operator = op;
-    dotInserted = false;
-  } else {
-    performCalculation();
-    operator = op;
-    dotInserted = false;
-  }
-}
+    //add digit to number
+    if ('0' <= element.id && element.id <= '9') {
+      if (display.innerHTML == '0') {
+        display.innerHTML = '';
+      }
+      display.innerHTML += element.id;
+      if (isActiveOperation) {
+        b = +display.innerHTML;
+      } else {
+        a = +display.innerHTML;
+      }
+    }
 
-function performCalculation() {
-  switch (operator) {
-    case '+':
-      result = a + b;
-      break;
-    case '-':
-      result = a - b;
-      break;
-    case 'x':
-      result = a * b;
-      break;
-    case ':':
-      result = a / b;
-      break;
-    default:
-      break;
-  }
-  a = result;
-  b = 0;
-  updateDisplay(result);
-}
+    //reset calculator
+    if (element.id == 'ac') {
+      display.innerHTML = 0;
+      a = 0; b = 0; result = 0; dotInserted = false; isActiveOperation = false;
+    }
 
-function handleEqualClick() {
-  if (operator) {
-    performCalculation();
-    operator = null;
-  }
-}
+    //delete last digit
+    if (element.id == 'del') {
+      display.innerHTML = display.innerHTML.slice(0, -1);
+      if (display.innerHTML == '') {
+        display.innerHTML = '0';
+      }
+      if (isActiveOperation) {
+        b = +display.innerHTML;
+      } else {
+        a = +display.innerHTML;
+      }
+    }
 
-function handlePercentageClick() {
-  if (!operator) {
-    a = a / 100;
-    updateDisplay(a);
-  } else {
-    b = b / 100;
-    updateDisplay(b);
-  }
-  dotInserted = true;
-}
+    //process of transforming number to percent
+    if (element.id == 'perc') {
+      dotInserted = true;
+      display.innerHTML = +display.innerHTML / 100;
+      if (isActiveOperation) {
+        b = +display.innerHTML;
+      } else {
+        a = +display.innerHTML;
+      }
+    }
 
-function handleSignReverseClick() {
-  if (!operator) {
-    a = -a;
-    updateDisplay(a);
-  } else {
-    b = -b;
-    updateDisplay(b);
-  }
-}
+    //reverse number sign
+    if (element.id == 'reverse-sign') {
+      display.innerHTML = +display.innerHTML * -1;
+      if (isActiveOperation) {
+        b = +display.innerHTML;
+      } else {
+        a = +display.innerHTML;
+      }
+    }
 
-function handleDeleteClick() {
-  if (!operator) {
-    a = parseFloat(a.toString().slice(0, -1));
-    updateDisplay(a);
-  } else {
-    b = parseFloat(b.toString().slice(0, -1));
-    updateDisplay(b);
-  }
-}
+    //handling dot insertion
+    if (element.id == '.' && !dotInserted) {
+      dotInserted = true;
+      display.innerHTML += '.';
+    }
 
-document.querySelectorAll('.keypad div').forEach((element) => {
-  element.addEventListener('click', () => {
-    const { id } = element;
+    //handling an operation
+    if (element.id == '-' || element.id == 'x' || element.id == '+' || element.id == '/') {
+      isActiveOperation = true;
+      operator = element.id;
+      display.innerHTML = '0';
+      operator = element.id;
+    }
+
+    //output the result and save it
+    if (element.id == '=' && operator != null) {
+      dotInserted = false;
+      isActiveOperation = false;
+      result = performCalculation(a, b, operator);
+      operator = null;
+      console.log(result);
+      display.innerHTML = String(result);
+      a = +display.innerHTML;
+      b = 0;
+    }
+
+
+    //debug data below
+    console.log(`display: ${display.innerHTML}, ${typeof display.innerHTML} a = ${a} b = ${b} operator = ${operator} dotInserted = ${dotInserted} isActiveOperation = ${isActiveOperation} a is ${typeof a} b is ${typeof b}`);
     audio.currentTime = 0;
-    audio.volume = 0.5;
-    audio.playbackRate = 2;
     audio.play();
 
-    switch (id) {
-      case 'ac':
-        clearCalculator();
-        break;
-      case 'del':
-        handleDeleteClick();
-        break;
-      case 'perc':
-        handlePercentageClick();
-        break;
-      case 'reverse-sign':
-        handleSignReverseClick();
-        break;
-      case '.':
-        handleDotClick();
-        break;
-      case '+':
-      case '-':
-      case 'x':
-      case ':':
-        handleOperatorClick(id);
-        break;
-      case '=':
-        handleEqualClick();
-        break;
-      default:
-        handleNumberClick(id);
-        break;
+    //check if dot is in the number(again because I ran into issues after performing an operation with numbers with decimal places)
+    if (display.innerHTML.includes('.') == true) {
+      dotInserted = true;
+    } else {
+      dotInserted = false;
     }
   });
 });
